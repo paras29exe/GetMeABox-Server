@@ -29,11 +29,11 @@ export const verifyOTP = async (req, res, next) => {
         if (!email || !otp) throw new ApiError(400, 'Email and OTP are required');
 
         const otpRecord = await OTP.findOne({ email, otp });
-        if (!otpRecord) throw new ApiError(400, 'Invalid OTP');
+        if (!otpRecord) throw new ApiError(400, 'Invalid OTP, Please try again.');
         if (otpRecord.expiresAt < new Date()) throw new ApiError(400, 'OTP expired');
 
+        // once the otp is verified, delete it from the database
         await OTP.deleteMany({ email });
-
         return res.status(200).json(new ApiResponse(200, 'OTP verified successfully'));
     } catch (error) {
         next(error);

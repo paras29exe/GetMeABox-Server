@@ -2,16 +2,16 @@ export default class ApiError extends Error {
     constructor(
         statusCode,
         message,
-        details = null,
+        source = null,
         errors = [],
         stack = []
     ) {
-        super(message);
+        super();
         this.statusCode = statusCode;
         this.success = false;
         this.message = message;
-        this.details = details; // Optional additional error details
-        this.errors = (errors.length > 0)? errors : Error;
+        this.source = source; // Optional additional error source
+        this.errors =  errors || Error ;
         this.timestamp = new Date().toISOString();
 
         if (stack.length > 0) {
@@ -21,23 +21,23 @@ export default class ApiError extends Error {
         }
     }
 
-    static badRequest(message = "Bad Request", details = null) {
-        return new ApiError(400, message, details);
+    static badRequest(message = "Bad Request", source = null, error = null) {
+        return new ApiError(400, message, source, error);
     }
 
-    static unauthorized(message = "Unauthorized", details = null) {
-        return new ApiError(401, message, details);
+    static unauthorized(message = "Unauthorized", source = null, error = null) {
+        return new ApiError(401, message, source, error);
     }
 
-    static forbidden(message = "Forbidden", details = null) {
-        return new ApiError(403, message, details);
+    static forbidden(message = "Forbidden", source = null, error = null) {
+        return new ApiError(403, message, source, error);
     }
 
-    static notFound(message = "Not Found", details = null) {
-        return new ApiError(404, message, details);
+    static notFound(message = "Not Found", source = null, error = null) {
+        return new ApiError(404, message, source, error);
     }
 
-    static serverError(message = "Internal Server Error", details = null) {
-        return new ApiError(500, message, details);
+    static internalServerError(message = "Internal Server Error", source = null, error = null) {
+        return new ApiError(500, message, source, error);
     }
 }
