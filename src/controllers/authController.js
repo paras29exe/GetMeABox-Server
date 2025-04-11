@@ -58,16 +58,20 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 
     const token = await user.generateToken();
 
-    res.status(200)
+    return res.status(200)
         .cookie('accessToken', token, cookieOptions)
         .json(ApiResponse.success(user, 'User logged in successfully'));
 });
 
 export const autoLogin = asyncHandler(async (req, res, next) => {
-    const token = await req.user.generateToken();
-    res.status(200)
-        .cookie('accessToken', token, cookieOptions)
-        .json(ApiResponse.success(req.user, 'User auto-logged in successfully'));
+    try {
+        const token = await req.user.generateToken();
+        return res.status(200)
+            .cookie('accessToken', token, cookieOptions)
+            .json(ApiResponse.success(req.user, 'User auto-logged in successfully'));
+    } catch (error) {
+        throw error;
+    }
 });
 
 
@@ -88,13 +92,13 @@ export const changePassword = asyncHandler(async (req, res, next) => {
     user.password = newPassword;
     await user.save();
 
-    res.status(200)
-       .json(ApiResponse.success({}, 'Password changed successfully'));
+    return res.status(200)
+        .json(ApiResponse.success({}, 'Password changed successfully'));
 })
 
 export const logoutUser = asyncHandler(async (req, res, next) => {
-    res.status(200)
-        .clearCookie('accessToken')
+    return res.status(200)
+        .clearCookie('accessToken', cookieOptions)
         .json(ApiResponse.success({}, 'User logged out successfully'));
 });
 
