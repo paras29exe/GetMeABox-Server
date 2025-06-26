@@ -23,6 +23,11 @@ app.use(express.urlencoded({extended: true, limit: "20kb"}))
 app.use(express.static("public"))
 app.use(cookieParser())
 
+// Health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 import ApiError from './utils/apiError.js';
 import otpRoutes from './routes/otpRoutes.js';
 import authRoutes from './routes/authRoutes.js';
